@@ -4,6 +4,8 @@
 
 A Chrome extension that grabs the transcript from any YouTube video and sends it to your AI provider of choice (OpenAI, Anthropic, or Google Gemini) to generate a quick summary with key points and timestamps.
 
+![TLDW Screenshot](.github/assets/tldw.screenshot.png)
+
 ## What it does
 
 - Extracts transcripts from YouTube videos (works with auto-generated captions too)
