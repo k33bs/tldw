@@ -1,0 +1,24 @@
+{
+  "name": "tldw",
+  "version": "1.0.0",
+  "description": "TL;DW - AI-powered YouTube video summaries so you don't have to watch",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.1",
+    "@types/chrome": "^0.0.268",
+    "@vitest/coverage-v8": "^1.4.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vitest": "^1.4.0"
+  }
+}
