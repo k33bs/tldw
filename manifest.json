@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "TLDW",
+  "name": "TL;AI",
   "version": "1.0.0",
-  "description": "TL;DW - AI-powered YouTube video summaries so you don't have to watch",
+  "description": "TL;AI - AI-powered YouTube video summaries so you don't have to watch",
   "permissions": [
     "activeTab",
     "storage",
@@ -29,7 +29,7 @@
   },
   "options_page": "src/options/index.html",
   "action": {
-    "default_title": "TLDW",
+    "default_title": "TL;AI",
     "default_icon": {
       "16": "assets/icons/icon16.png",
       "48": "assets/icons/icon48.png",

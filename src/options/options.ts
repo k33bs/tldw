@@ -13,6 +13,11 @@ const PROVIDER_LINKS: Record<AIProvider, { name: string; url: string }> = {
   openai: { name: 'OpenAI', url: 'https://platform.openai.com/api-keys' },
   anthropic: { name: 'Anthropic', url: 'https://console.anthropic.com/settings/keys' },
   gemini: { name: 'Google AI Studio', url: 'https://aistudio.google.com/app/apikey' },
+  deepseek: { name: 'DeepSeek', url: 'https://platform.deepseek.com/api_keys' },
+  grok: { name: 'xAI', url: 'https://console.x.ai/' },
+  mistral: { name: 'Mistral', url: 'https://console.mistral.ai/api-keys/' },
+  glm: { name: 'Zhipu AI', url: 'https://open.bigmodel.cn/usercenter/apikeys' },
+  kimi: { name: 'Moonshot AI', url: 'https://platform.moonshot.cn/console/api-keys' },
 };
 
 function updateModelOptions(provider: AIProvider, currentModel?: string) {

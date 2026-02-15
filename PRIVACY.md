@@ -1,10 +1,10 @@
-# Privacy Policy for TLDW
+# Privacy Policy for TL;AI
 
 **Last updated: February 2, 2026**
 
 ## Overview
 
-TLDW ("Too Long; Didn't Watch") is a browser extension that summarizes YouTube videos using AI. We are committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights.
+TL;AI ("Too Long; Ask AI") is a browser extension that summarizes YouTube videos using AI. We are committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights.
 
 ## Data Collection
 
@@ -71,7 +71,7 @@ We may update this privacy policy from time to time. Changes will be posted to t
 ## Contact
 
 For questions about this privacy policy, please open an issue on our GitHub repository:
-https://github.com/k33bs/tldw/issues
+https://github.com/k33bs/tlai/issues
 
 ## Your Rights
 

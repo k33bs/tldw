@@ -1,12 +1,12 @@
 {
-  "name": "tldw",
+  "name": "tlai",
   "version": "1.0.0",
-  "description": "TL;DW - AI-powered YouTube video summaries so you don't have to watch",
+  "description": "TL;AI - AI-powered YouTube video summaries so you don't have to watch",
   "type": "module",
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
-    "build:zip": "npm run build && rm -f tldw.zip && zip -r tldw.zip manifest.json dist/ src/sidepanel/index.html src/sidepanel/sidepanel.css src/options/index.html assets/ -x '*.map'",
+    "build:zip": "npm run build && rm -f tlai.zip && zip -r tlai.zip manifest.json dist/ src/sidepanel/index.html src/sidepanel/sidepanel.css src/options/index.html assets/ -x '*.map'",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -99,7 +99,7 @@ async function injectContentScript(tabId: number): Promise<boolean> {
     await new Promise((resolve) => setTimeout(resolve, 100));
     return true;
   } catch (error) {
-    console.error('[TLDW] Failed to inject content script:', error);
+    console.error('[TL;AI] Failed to inject content script:', error);
     return false;
   }
 }
@@ -242,7 +242,7 @@ async function seekToTimestamp(timestamp: string) {
   try {
     await sendToContent({ type: 'SEEK_TO_TIMESTAMP', timestamp }, 1);
   } catch (error) {
-    console.error('[TLDW] Failed to seek:', error);
+    console.error('[TL;AI] Failed to seek:', error);
     showToast('Could not seek. Try refreshing the page.');
   }
 }

@@ -74,12 +74,14 @@ Test overview
         })
       );
 
-      // Verify request body
+      // Verify request body uses system/user message separation for caching
       const fetchCall = mockFetch.mock.calls[0];
       const body = JSON.parse(fetchCall[1].body);
       expect(body.model).toBe('gpt-4o-mini');
-      expect(body.messages[0].role).toBe('user');
-      expect(body.messages[0].content).toContain('Test transcript');
+      expect(body.messages[0].role).toBe('system');
+      expect(body.messages[0].content).toContain('Conclusion');
+      expect(body.messages[1].role).toBe('user');
+      expect(body.messages[1].content).toContain('Test transcript');
     });
 
     it('handles OpenAI API errors correctly', async () => {
@@ -148,9 +150,14 @@ Anthropic overview
         })
       );
 
+      // Verify request body uses system message with cache_control
       const fetchCall = mockFetch.mock.calls[0];
       const body = JSON.parse(fetchCall[1].body);
       expect(body.model).toBe('claude-3-5-sonnet-20241022');
+      expect(body.system[0].type).toBe('text');
+      expect(body.system[0].cache_control).toEqual({ type: 'ephemeral' });
+      expect(body.messages[0].role).toBe('user');
+      expect(body.messages[0].content).toContain('transcript');
     });
 
     it('handles Anthropic API errors correctly', async () => {
@@ -226,6 +233,12 @@ Gemini overview
       // Verify API key is in URL
       const fetchCall = mockFetch.mock.calls[0];
       expect(fetchCall[0]).toContain('key=gemini-test-key');
+
+      // Verify systemInstruction is used for instructions
+      const body = JSON.parse(fetchCall[1].body);
+      expect(body.systemInstruction).toBeDefined();
+      expect(body.systemInstruction.parts[0].text).toContain('Conclusion');
+      expect(body.contents[0].parts[0].text).toContain('transcript');
     });
 
     it('handles Gemini API errors correctly', async () => {

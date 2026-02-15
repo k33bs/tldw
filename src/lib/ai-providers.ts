@@ -1,4 +1,4 @@
-import { AIProvider, getSettings, MODELS } from './storage';
+import { AIProvider, getSettings } from './storage';
 
 export interface SummaryResult {
   conclusion: string;
@@ -24,16 +24,13 @@ function getKeyPointsCount(length: string): string {
   }
 }
 
-function buildPrompt(transcript: string, summaryLength: string): string {
+function getSystemInstructions(summaryLength: string): string {
   const pointsCount = getKeyPointsCount(summaryLength);
 
-  return `Summarize this YouTube video transcript. Provide:
+  return `You summarize YouTube video transcripts. When given a transcript, provide:
 1. THE ANSWER (20 words max) - If someone asked "what's the answer?" or "just tell me so I don't have to watch" - what would you say? Give the actual answer, solution, technique, verdict, or outcome. Be specific and actionable.
 2. A brief 2-3 sentence overview
 3. ${pointsCount} key points, each with the approximate timestamp from the transcript
-
-Transcript:
-${transcript}
 
 Format your response EXACTLY as follows (use this exact structure):
 ## Conclusion
@@ -59,14 +56,18 @@ Important:
 - Keep each point concise but informative`;
 }
 
-class OpenAIAdapter implements AIAdapter {
+// OpenAI-compatible adapter used by OpenAI, DeepSeek, Grok, Mistral, GLM, and Kimi
+// Uses system/user message separation for automatic prompt caching (OpenAI, DeepSeek)
+class OpenAICompatibleAdapter implements AIAdapter {
   constructor(
     private apiKey: string,
-    private model: string
+    private model: string,
+    private baseUrl: string = 'https://api.openai.com/v1',
+    private providerName: string = 'OpenAI'
   ) {}
 
   async summarize(transcript: string, summaryLength: string): Promise<string> {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,8 +77,12 @@ class OpenAIAdapter implements AIAdapter {
         model: this.model,
         messages: [
           {
+            role: 'system',
+            content: getSystemInstructions(summaryLength),
+          },
+          {
             role: 'user',
-            content: buildPrompt(transcript, summaryLength),
+            content: `Summarize this transcript:\n\n${transcript}`,
           },
         ],
         max_tokens: 2000,
@@ -87,7 +92,7 @@ class OpenAIAdapter implements AIAdapter {
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.error?.message || `OpenAI API error: ${response.status}`);
+      throw new Error(error.error?.message || `${this.providerName} API error: ${response.status}`);
     }
 
     const data = await response.json();
@@ -95,6 +100,16 @@ class OpenAIAdapter implements AIAdapter {
   }
 }
 
+const OPENAI_COMPATIBLE_PROVIDERS: Record<string, { baseUrl: string; name: string }> = {
+  openai: { baseUrl: 'https://api.openai.com/v1', name: 'OpenAI' },
+  deepseek: { baseUrl: 'https://api.deepseek.com', name: 'DeepSeek' },
+  grok: { baseUrl: 'https://api.x.ai/v1', name: 'Grok' },
+  mistral: { baseUrl: 'https://api.mistral.ai/v1', name: 'Mistral' },
+  glm: { baseUrl: 'https://api.z.ai/api/paas/v4', name: 'GLM' },
+  kimi: { baseUrl: 'https://api.moonshot.ai/v1', name: 'Kimi' },
+};
+
+// Anthropic adapter with prompt caching via cache_control on system message
 class AnthropicAdapter implements AIAdapter {
   constructor(
     private apiKey: string,
@@ -113,10 +128,17 @@ class AnthropicAdapter implements AIAdapter {
       body: JSON.stringify({
         model: this.model,
         max_tokens: 2000,
+        system: [
+          {
+            type: 'text',
+            text: getSystemInstructions(summaryLength),
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
         messages: [
           {
             role: 'user',
-            content: buildPrompt(transcript, summaryLength),
+            content: `Summarize this transcript:\n\n${transcript}`,
           },
         ],
       }),
@@ -132,6 +154,7 @@ class AnthropicAdapter implements AIAdapter {
   }
 }
 
+// Gemini adapter with systemInstruction for better separation of concerns
 class GeminiAdapter implements AIAdapter {
   constructor(
     private apiKey: string,
@@ -147,9 +170,12 @@ class GeminiAdapter implements AIAdapter {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: getSystemInstructions(summaryLength) }],
+        },
         contents: [
           {
-            parts: [{ text: buildPrompt(transcript, summaryLength) }],
+            parts: [{ text: `Summarize this transcript:\n\n${transcript}` }],
           },
         ],
         generationConfig: {
@@ -170,16 +196,17 @@ class GeminiAdapter implements AIAdapter {
 }
 
 function createAdapter(provider: AIProvider, apiKey: string, model: string): AIAdapter {
-  switch (provider) {
-    case 'openai':
-      return new OpenAIAdapter(apiKey, model);
-    case 'anthropic':
-      return new AnthropicAdapter(apiKey, model);
-    case 'gemini':
-      return new GeminiAdapter(apiKey, model);
-    default:
-      throw new Error(`Unknown provider: ${provider}`);
+  if (provider === 'anthropic') {
+    return new AnthropicAdapter(apiKey, model);
   }
+  if (provider === 'gemini') {
+    return new GeminiAdapter(apiKey, model);
+  }
+  const providerConfig = OPENAI_COMPATIBLE_PROVIDERS[provider];
+  if (providerConfig) {
+    return new OpenAICompatibleAdapter(apiKey, model, providerConfig.baseUrl, providerConfig.name);
+  }
+  throw new Error(`Unknown provider: ${provider}`);
 }
 
 /**

@@ -21,7 +21,7 @@ interface CaptionTrack {
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === 'GET_TRANSCRIPT') {
     handleGetTranscript().then(sendResponse).catch((error) => {
-      console.error('[TLDW] Error:', error);
+      console.error('[TL;AI] Error:', error);
       sendResponse({ error: error.message });
     });
     return true; // Async response
@@ -221,7 +221,7 @@ async function fetchTranscriptViaInnertube(videoId: string): Promise<TranscriptS
       }
     }
   } catch (e) {
-    console.error('[TLDW] Innertube API error:', e);
+    console.error('[TL;AI] Innertube API error:', e);
   }
 
   return [];
@@ -283,7 +283,7 @@ async function fetchTranscriptViaYtApi(videoId: string): Promise<TranscriptSegme
       }
     }
   } catch (e) {
-    console.error('[TLDW] YT API error:', e);
+    console.error('[TL;AI] YT API error:', e);
   }
 
   return [];

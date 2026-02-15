@@ -1,10 +1,10 @@
-# TLDW
+# TL;AI
 
-**Too Long; Didn't Watch** - Get AI summaries of YouTube videos without sitting through the whole thing.
+**Too Long; Ask AI** - Get AI summaries of YouTube videos without sitting through the whole thing.
 
 A Chrome extension that grabs the transcript from any YouTube video and sends it to your AI provider of choice (OpenAI, Anthropic, or Google Gemini) to generate a quick summary with key points and timestamps.
 
-![TLDW Screenshot](.github/assets/tldw.screenshot.png)
+![TL;AI Screenshot](.github/assets/tldw.screenshot.png)
 
 ## What it does
 
@@ -36,7 +36,7 @@ Your API key is stored locally in Chrome - it never touches any server except th
 ## Usage
 
 1. Go to any YouTube video
-2. Click the TLDW extension icon to open the side panel
+2. Click the TL;AI extension icon to open the side panel
 3. Hit "Summarize Video"
 4. Wait a few seconds for the AI to do its thing
 

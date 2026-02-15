@@ -50,7 +50,7 @@ async function getExtensionId(context: BrowserContext): Promise<string> {
   throw new Error('Could not find extension ID');
 }
 
-test.describe('TLDW Extension', () => {
+test.describe('TL;AI Extension', () => {
   let context: BrowserContext;
   let extensionId: string;
 
@@ -73,7 +73,7 @@ test.describe('TLDW Extension', () => {
     await page.goto(`chrome-extension://${extensionId}/src/options/index.html`);
 
     // Check that the page has the expected elements
-    await expect(page.locator('h1')).toContainText('TLDW');
+    await expect(page.locator('h1')).toContainText('TL;AI');
 
     // Check for provider dropdown
     const providerSelect = page.locator('#provider');
@@ -135,7 +135,7 @@ test.describe('TLDW Extension', () => {
     await sidePanelPage.goto(`chrome-extension://${extensionId}/src/sidepanel/index.html`);
 
     // Check that side panel elements are present
-    await expect(sidePanelPage.locator('h1')).toContainText('TLDW');
+    await expect(sidePanelPage.locator('h1')).toContainText('TL;AI');
     await expect(sidePanelPage.locator('#header-summarize-btn')).toBeVisible();
     await expect(sidePanelPage.locator('#summarize-btn')).toBeVisible();
     await expect(sidePanelPage.locator('#settings-btn')).toBeVisible();
@@ -203,7 +203,7 @@ test.describe('Content Script Integration', () => {
     // Check console for any extension-related errors
     const errors: string[] = [];
     page.on('pageerror', (error) => {
-      if (error.message.includes('TLDW')) {
+      if (error.message.includes('TL;AI')) {
         errors.push(error.message);
       }
     });
